@@ -25,8 +25,13 @@ func TransformCardStringToCard(cardString string) *Card{
 }
 
 
-func RemoveCardByIndex(cards []*Card, idex int) []*Card {
-	newCard := make([]*Card, 0)
-	newCard = append(newCard, cards[:idex]...)
-	return append(newCard, cards[idex+1:]...)
+func RemoveCardsByIdx(cards []*Card, indexes ...int) []*Card {
+	newCard := cards
+	for i, v := range indexes{
+		tmpCards := make([]*Card,0)
+		tmpCards = append(tmpCards, newCard[:v-i]...)
+		tmpCards = append(tmpCards, newCard[v-i+1:]...)
+		newCard = tmpCards
+	}
+	return newCard
 }

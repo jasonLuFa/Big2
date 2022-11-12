@@ -9,6 +9,7 @@ import (
 const HandCardAmount = 13
 var Turn = 1
 
+
 type HumanPlayer struct {
 	name      string
 	id        int
@@ -49,12 +50,8 @@ func (player *HumanPlayer) TakeTurn(topCardPattern CardPattern, round int) {
 	}
 
 	// remove playCards from player, and add to Big2 topPlay
-	// 要修正輸入多個 index 會錯誤
-	var newHandCard []*Card
-	for _, playCardIdx := range playCardsIdx{
-		newHandCard = RemoveCardByIndex(player.handCards, playCardIdx)
-	}
-	player.handCards = newHandCard
+	newHandCards := RemoveCardsByIdx(player.handCards, playCardsIdx...)
+	player.handCards = newHandCards
 	player.playCards = playCardPattern
 	fmt.Printf("玩家 %s 打出了 %s %v\n\n",player.name, playCardPattern.GetKind(), player.playCards.GetCards())
 	Turn++
@@ -81,4 +78,12 @@ func (player *HumanPlayer) play() ([]*Card,[]int){
 
 func (player *HumanPlayer) GetPlayCards() CardPattern{
 	return player.playCards
+}
+
+func (player *HumanPlayer) SetPlayCardsHandler(handler PlayCardsHandler){
+	player.playerCardsHandler = handler
+}
+
+func (player *HumanPlayer) GetPlayerHandCards() []*Card{
+	return player.handCards
 }

@@ -7,6 +7,7 @@ import (
 
 const numberOfPalyers = 4
 var passCount int
+var handler PlayCardsHandler
 
 type Big2 struct {
 	topPlay   CardPattern
@@ -14,7 +15,7 @@ type Big2 struct {
 	topPlayer *HumanPlayer
 	winner    *HumanPlayer
 	players   [numberOfPalyers]*HumanPlayer
-	deck      *Deck
+	deck      *Deck 
 }
 
 func NewBig2() *Big2{
@@ -22,11 +23,10 @@ func NewBig2() *Big2{
 }
 
 func (b *Big2) Start(playCardsHandler PlayCardsHandler) {
+	handler = playCardsHandler
 	b.initPlayers(playCardsHandler)
 	b.dealCardsToPlayers()
 	b.takeRound()
-
-
 }
 
 func (b *Big2) initPlayers(playerCardHandler PlayCardsHandler) {
@@ -67,7 +67,7 @@ func (b *Big2) dealCardsToPlayers() {
 	}
 }
 
-// 每 round 不固定 turn，且新的 turn 時，topPlay 才會是 nil
+// CoR 跑過 single 後，之後再跑是從會跳過 single
 func (b *Big2) takeRound() {
 	isGameOver := false
 	for !isGameOver{
@@ -79,25 +79,29 @@ func (b *Big2) takeRound() {
 		for passCount < 3 {
 			turnOfPlayerId = turnOfPlayerId % 4
 			turnOfPlayer := b.players[turnOfPlayerId]
+			turnOfPlayer.SetPlayCardsHandler(handler)
 			turnOfPlayer.TakeTurn(b.topPlay, b.round)
 			turnOfPlayerId++
 			
 			playerPlayCard := turnOfPlayer.GetPlayCards()
-			fmt.Println(">>>>>>>>>>>>>>>> playerPlayCard",playerPlayCard)
 			if playerPlayCard == nil {
 				passCount++
-				fmt.Println(">>>>>>>>>>>>>>>> passCount",passCount)
 				continue
+			}
+
+			if len(turnOfPlayer.GetPlayerHandCards()) == 0{
+				b.winner = turnOfPlayer
+				isGameOver = true
+				break
 			}
 			b.topPlayer = turnOfPlayer
 			passCount = 0
 			b.topPlay = playerPlayCard
 		}
 		b.topPlay = nil
-		fmt.Println("-------> b.topPlay :",b.topPlay)
 	}
 }
 
 func (b *Big2) ShowWinner() {
-	fmt.Println("遊戲結束，遊戲的勝利者為 ",b.winner)
+	fmt.Println("遊戲結束，遊戲的勝利者為 ",b.winner.name)
 }
