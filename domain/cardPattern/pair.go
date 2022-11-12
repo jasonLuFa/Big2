@@ -21,16 +21,17 @@ func (p *Pair) IsBigger(cardPattern domain.CardPattern) (bool, error) {
 	}
 
 	if (p.GetCards()[0].GetRankKind() == targetCards[0].GetRankKind()) {
+		return p.sameRankPairIsBiggest()
+	}
+
+	return p.GetCards()[0].IsBigger(targetCards[0]), nil
+}
+
+func (p *Pair) sameRankPairIsBiggest() (bool, error) {
 		if p.GetCards()[0].GetSuitKind() == 3 || p.GetCards()[1].GetSuitKind() == 3 {
 			return true, nil
 		}
 		return false, nil
-	}
-
-	if p.GetCards()[0].IsBigger(targetCards[0]){
-		return true, nil
-	}
-	return false, nil
 }
 
 func ValidatePairCard(cardPattern domain.CardPattern) ([]*domain.Card, bool) {
