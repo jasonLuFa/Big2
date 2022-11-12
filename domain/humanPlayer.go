@@ -34,6 +34,7 @@ func (player *HumanPlayer) TakeTurn(topCardPattern CardPattern, round int) {
 	for !isValidated{
 		var playCards []*Card
 		playCards, playCardsIdx = player.play()
+
 		// palyer pass
 		if playCards == nil && playCardsIdx == nil{
 			if Turn == 1 {
@@ -47,15 +48,17 @@ func (player *HumanPlayer) TakeTurn(topCardPattern CardPattern, round int) {
 		}	
 
 		playCardPattern ,isValidated = player.playerCardsHandler.PlayCardValidateWithTopCard(playCards, topCardPattern, round)
+		player.SetPlayCardsHandler(handler)
+		if !isValidated{
+			fmt.Println("此牌型不合法，請再嘗試一次。")
+		}
 	}
 
 	// remove playCards from player, and add to Big2 topPlay
-	newHandCards := RemoveCardsByIdx(player.handCards, playCardsIdx...)
-	player.handCards = newHandCards
-	player.playCards = playCardPattern
-	fmt.Printf("玩家 %s 打出了 %s %v\n\n",player.name, playCardPattern.GetKind(), player.playCards.GetCards())
-	Turn++
+	player.removePlayCardsFromPlayer(playCardsIdx, playCardPattern)
 }
+
+
 
 func (player *HumanPlayer) play() ([]*Card,[]int){
 	playCardsIdxString := strings.Fields(Scanner(fmt.Sprintf("你要出的牌是 (請依序 0 ~ %d ，以空白隔開可出多張) (如要 pass 則輸入 -1) :", len(player.handCards)-1)))
@@ -75,6 +78,13 @@ func (player *HumanPlayer) play() ([]*Card,[]int){
 	return playCards, playCardsIdx
 }
 
+func (player *HumanPlayer) removePlayCardsFromPlayer(playCardsIdx []int, playCardPattern CardPattern) {
+	newHandCards := RemoveCardsByIdx(player.handCards, playCardsIdx...)
+	player.handCards = newHandCards
+	player.playCards = playCardPattern
+	fmt.Printf("玩家 %s 打出了 %s %v\n\n", player.name, playCardPattern.GetKind(), player.playCards.GetCards())
+	Turn++
+}
 
 func (player *HumanPlayer) GetPlayCards() CardPattern{
 	return player.playCards

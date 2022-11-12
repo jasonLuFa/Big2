@@ -67,39 +67,55 @@ func (b *Big2) dealCardsToPlayers() {
 	}
 }
 
-// CoR 跑過 single 後，之後再跑是從會跳過 single
 func (b *Big2) takeRound() {
 	isGameOver := false
 	for !isGameOver{
-		b.round ++
-		passCount = 0
-		fmt.Printf("新的回合開始了\n\n")
+		b.initNewRound()
 
 		turnOfPlayerId := b.topPlayer.id
-		for passCount < 3 {
-			turnOfPlayerId = turnOfPlayerId % 4
-			turnOfPlayer := b.players[turnOfPlayerId]
-			turnOfPlayer.SetPlayCardsHandler(handler)
+		for b.isTurnOver() {
+			turnOfPlayer := b.determinedTurnOfPlayer(turnOfPlayerId)
 			turnOfPlayer.TakeTurn(b.topPlay, b.round)
 			turnOfPlayerId++
 			
+			// player pass
 			playerPlayCard := turnOfPlayer.GetPlayCards()
 			if playerPlayCard == nil {
 				passCount++
 				continue
 			}
 
+			// Game over
 			if len(turnOfPlayer.GetPlayerHandCards()) == 0{
 				b.winner = turnOfPlayer
 				isGameOver = true
 				break
 			}
+
 			b.topPlayer = turnOfPlayer
 			passCount = 0
 			b.topPlay = playerPlayCard
 		}
 		b.topPlay = nil
 	}
+}
+
+func (b *Big2) initNewRound(){
+	fmt.Printf("新的回合開始了\n\n")	
+	b.round ++
+	passCount = 0
+	Turn = 1
+}
+
+func (b *Big2) isTurnOver() bool{
+	return passCount < numberOfPalyers-1
+}
+
+func (b *Big2) determinedTurnOfPlayer(turnOfPlayerId int) *HumanPlayer{
+		turnOfPlayerId = turnOfPlayerId % 4
+		turnOfPlayer := b.players[turnOfPlayerId]
+		turnOfPlayer.SetPlayCardsHandler(handler)
+		return turnOfPlayer
 }
 
 func (b *Big2) ShowWinner() {

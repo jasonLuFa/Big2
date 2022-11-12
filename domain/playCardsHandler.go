@@ -18,11 +18,8 @@ func (handler *PlayCardsHandler) PlayCardValidateWithTopCard(cards []*Card, topC
 		}
 	}
 
-	// TODO: 這邊驗證出牌型好像出問題
 	if cardPattern, ok := handler.ValidatedCardPattern(cards); ok {
-		fmt.Println("topCardsCardPattern  =.+ :",topCardsCardPattern)
 		if topCardsCardPattern == nil {
-			fmt.Println("isValidated", true)
 			return cardPattern, true
 		}
 		isBigger, error := cardPattern.IsBigger(topCardsCardPattern)
@@ -38,7 +35,7 @@ func (handler *PlayCardsHandler) PlayCardValidateWithTopCard(cards []*Card, topC
 		return handler.PlayCardValidateWithTopCard(cards, topCardsCardPattern, round)
 	}
 
-	fmt.Println("此牌型不合法，請再嘗試一次。")
+	// fmt.Println("此牌型不合法，請再嘗試一次。")
 	return nil, false
 }
 

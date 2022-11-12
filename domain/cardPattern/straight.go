@@ -11,7 +11,7 @@ type Straight struct {
 }
 
 func NewStraight(cards []*domain.Card) *Straight{
-	cardBase := *domain.NewCardPatternBase("順子 ",cards)
+	cardBase := *domain.NewCardPatternBase("順子",cards)
 	return &Straight{&cardBase}
 }
 

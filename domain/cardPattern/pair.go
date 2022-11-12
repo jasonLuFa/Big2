@@ -36,9 +36,7 @@ func (p *Pair) sameRankPairIsBiggest() (bool, error) {
 
 func ValidatePairCard(cardPattern domain.CardPattern) ([]*domain.Card, bool) {
 	cards := cardPattern.GetCards()
-	fmt.Println("+++++++++++++++",len(cards) == 2 && cards[0].GetRank().IsEqual(cards[1].GetRank()))
 	if len(cards) == 2 && cards[0].GetRank().IsEqual(cards[1].GetRank()){
-		fmt.Println("card =.= :", cards)
 		return cards, true
 	}
 	return nil, false

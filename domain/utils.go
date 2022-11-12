@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"os"
 	"regexp"
+	"sort"
 )
 
 func Scanner(input string) string {
@@ -26,6 +27,7 @@ func TransformCardStringToCard(cardString string) *Card{
 
 
 func RemoveCardsByIdx(cards []*Card, indexes ...int) []*Card {
+	sort.Ints(indexes)
 	newCard := cards
 	for i, v := range indexes{
 		tmpCards := make([]*Card,0)

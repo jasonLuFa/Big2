@@ -14,7 +14,7 @@ func NewFullHouseHandler(next domain.IPlayCardsHandlerBase) *FullHouseHandler {
 }
 
 func (p *FullHouseHandler) ValidatedCardPattern(cards []*domain.Card) (domain.CardPattern, bool){
-	fullHouse := cardPattern.NewStraight(cards)
+	fullHouse := cardPattern.NewFullHouse(cards)
 	_, isValidated:= cardPattern.ValidateFullHouseCard(fullHouse)
 	if isValidated {
 		return fullHouse, true
