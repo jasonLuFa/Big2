@@ -4,6 +4,7 @@
   - Strategy pattern
   - Template method
   - Chain-of-responsibility pattern ( CoR ) 
+- This game follow the OCP principle
 
 # OOA UML
 ![OOA UML](https://github.com/jasonLuFa/Big2/blob/main/big2%20OOA.png)
