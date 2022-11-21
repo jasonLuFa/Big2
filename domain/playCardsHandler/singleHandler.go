@@ -13,11 +13,6 @@ func NewSingleHandler(next domain.IPlayCardsHandlerBase) *SingleHandler {
 	return &SingleHandler{domain.NewPlayCardsHandlerBase(next)}
 }
 
-func (s *SingleHandler) ValidatedCardPattern(cards []*domain.Card) (domain.CardPattern, bool){
-	single := cardPattern.NewSingle(cards)
-	_, isValidated := cardPattern.ValidateSingleCard(single)
-	if isValidated{
-		return single, true
-	}
-	return nil, false
+func (s *SingleHandler) NewCardPattern(cards []*domain.Card) domain.ICardPattern {
+	return cardPattern.NewSingle(cards)
 }

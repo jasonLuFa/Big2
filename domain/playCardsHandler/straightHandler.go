@@ -13,11 +13,6 @@ func NewStraightHandler(next domain.IPlayCardsHandlerBase) *StraightHandler {
 	return &StraightHandler{domain.NewPlayCardsHandlerBase(next)}
 }
 
-func (p *StraightHandler) ValidatedCardPattern(cards []*domain.Card) (domain.CardPattern, bool){
-	straight := cardPattern.NewStraight(cards)
-	_, isValidated:= cardPattern.ValidateStraightCard(straight)
-	if isValidated {
-		return straight, true
-	}
-	return nil, false
+func (s *StraightHandler) NewCardPattern(cards []*domain.Card) domain.ICardPattern {
+	return cardPattern.NewStraight(cards)
 }

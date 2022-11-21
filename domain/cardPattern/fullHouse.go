@@ -9,45 +9,45 @@ type FullHouse struct {
 	*domain.CardPatternBase
 }
 
-func NewFullHouse(cards []*domain.Card) *FullHouse{
-	cardBase := *domain.NewCardPatternBase("葫蘆",cards)
+func NewFullHouse(cards []*domain.Card) *FullHouse {
+	cardBase := *domain.NewCardPatternBase("葫蘆", cards)
 	return &FullHouse{&cardBase}
 }
 
-func (f *FullHouse) IsBigger(cardPattern domain.CardPattern) (bool, error) {
-	targetFullHouseMap, isPairCard := ValidateFullHouseCard(cardPattern)
+func (f *FullHouse) IsBigger(cardPattern domain.ICardPattern) (bool, error) {
+	targetFullHouseMap, isPairCard := f.Validate(cardPattern)
 	if !isPairCard {
 		return false, fmt.Errorf("your card pattern is not a fullHouse card, so can't compare")
 	}
 
-	fullHouse := getFullHouseMap(f.GetCards())
-	fullHouseCompareRank := getCompareRank(fullHouse)
+	fullHouse := f.getFullHouseMap(f.GetCards())
+	fullHouseCompareRank := f.getCompareRank(fullHouse)
 
-	targetFullHouseCompareRank := getCompareRank(targetFullHouseMap)
+	targetFullHouseCompareRank := f.getCompareRank(targetFullHouseMap.(map[domain.Rank]int))
 
 	return fullHouseCompareRank.IsBigger(targetFullHouseCompareRank), nil
 }
 
-func ValidateFullHouseCard(cardPattern domain.CardPattern) (map[domain.Rank]int, bool) {
+func (f *FullHouse) Validate(cardPattern domain.ICardPattern) (interface{}, bool) {
 	cards := cardPattern.GetCards()
-	if len(cards) != 5{
-		return nil,false
+	if len(cards) != 5 {
+		return nil, false
 	}
 
-	fullHouseMap := getFullHouseMap(cards)
+	fullHouseMap := f.getFullHouseMap(cards)
 
 	for _, account := range fullHouseMap {
-		if account != 2 && account != 3{
+		if account != 2 && account != 3 {
 			return nil, false
 		}
 	}
-	return fullHouseMap,true
+	return fullHouseMap, true
 }
 
-func getFullHouseMap(cards []*domain.Card) map[domain.Rank]int{
+func (f *FullHouse) getFullHouseMap(cards []*domain.Card) map[domain.Rank]int {
 	fullHouseMap := make(map[domain.Rank]int)
 	for _, card := range cards {
-		if _ ,ok:= fullHouseMap[card.GetRank()]; ok{
+		if _, ok := fullHouseMap[card.GetRank()]; ok {
 			fullHouseMap[card.GetRank()] += 1
 			continue
 		}
@@ -56,13 +56,12 @@ func getFullHouseMap(cards []*domain.Card) map[domain.Rank]int{
 	return fullHouseMap
 }
 
-func getCompareRank(fullHouseMap map[domain.Rank]int) domain.Rank{
+func (f *FullHouse) getCompareRank(fullHouseMap map[domain.Rank]int) domain.Rank {
 	var fullHouseCompareRank domain.Rank
-	for rank, amount := range fullHouseMap{
-		if amount ==3 {
+	for rank, amount := range fullHouseMap {
+		if amount == 3 {
 			fullHouseCompareRank = rank
 		}
 	}
 	return fullHouseCompareRank
 }
-

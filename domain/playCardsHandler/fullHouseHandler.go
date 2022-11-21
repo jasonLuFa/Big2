@@ -13,11 +13,6 @@ func NewFullHouseHandler(next domain.IPlayCardsHandlerBase) *FullHouseHandler {
 	return &FullHouseHandler{domain.NewPlayCardsHandlerBase(next)}
 }
 
-func (p *FullHouseHandler) ValidatedCardPattern(cards []*domain.Card) (domain.CardPattern, bool){
-	fullHouse := cardPattern.NewFullHouse(cards)
-	_, isValidated:= cardPattern.ValidateFullHouseCard(fullHouse)
-	if isValidated {
-		return fullHouse, true
-	}
-	return nil, false
+func (f *FullHouseHandler) NewCardPattern(cards []*domain.Card) domain.ICardPattern {
+	return cardPattern.NewFullHouse(cards)
 }

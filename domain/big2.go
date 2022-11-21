@@ -10,7 +10,7 @@ var passCount int
 var handler PlayCardsHandler
 
 type Big2 struct {
-	topPlay   CardPattern
+	topPlay   ICardPattern
 	round     int
 	topPlayer *HumanPlayer
 	winner    *HumanPlayer

@@ -10,9 +10,9 @@ func NewPlayCardsHandler(iPlayCardsHandlerBase IPlayCardsHandlerBase) *PlayCards
 	return &PlayCardsHandler{iPlayCardsHandlerBase}
 }
 
-func (handler *PlayCardsHandler) PlayCardValidateWithTopCard(cards []*Card, topCardsCardPattern CardPattern, round int) (CardPattern, bool) {
-	if round == 1 && Turn == 1{
-		if !handler.validatePlayClubThreeCardPattern(cards){
+func (handler *PlayCardsHandler) PlayCardValidateWithTopCard(cards []*Card, topCardsCardPattern ICardPattern, round int) (ICardPattern, bool) {
+	if round == 1 && Turn == 1 {
+		if !handler.validatePlayClubThreeCardPattern(cards) {
 			fmt.Println("首回合第一輪必須打出包含梅花三的牌型")
 			return nil, false
 		}
@@ -25,7 +25,7 @@ func (handler *PlayCardsHandler) PlayCardValidateWithTopCard(cards []*Card, topC
 		isBigger, error := cardPattern.IsBigger(topCardsCardPattern)
 		if error != nil {
 			fmt.Println(error)
-			return nil ,false
+			return nil, false
 		}
 		return cardPattern, isBigger
 	}
@@ -36,6 +36,15 @@ func (handler *PlayCardsHandler) PlayCardValidateWithTopCard(cards []*Card, topC
 	}
 
 	// fmt.Println("此牌型不合法，請再嘗試一次。")
+	return nil, false
+}
+
+func (handler *PlayCardsHandler) ValidatedCardPattern(cards []*Card) (ICardPattern, bool) {
+	cardPattern := handler.NewCardPattern(cards)
+	_, isValidated := cardPattern.Validate(cardPattern)
+	if isValidated {
+		return cardPattern, true
+	}
 	return nil, false
 }
 
@@ -50,8 +59,8 @@ func (handler *PlayCardsHandler) validatePlayClubThreeCardPattern(cards []*Card)
 }
 
 type IPlayCardsHandlerBase interface {
-	ValidatedCardPattern([]*Card) (CardPattern, bool)
 	GetNextIPlayCardHandler() IPlayCardsHandlerBase
+	NewCardPattern([]*Card) ICardPattern
 }
 
 type PlayCardsHandlerBase struct {

@@ -36,8 +36,8 @@ type Card struct {
 	Rank
 }
 
-func NewCard(s Suit,r Rank) *Card {
-	return &Card{s,r}
+func NewCard(s Suit, r Rank) *Card {
+	return &Card{s, r}
 }
 
 func (card *Card) String() string {
@@ -85,21 +85,20 @@ func (s Suit) IsBigger(targetSuit Suit) bool {
 	return s.GetSuitKind() > targetSuit.GetSuitKind()
 }
 
-func GetSuitFullName(suitShortcut string) suitKind{
-		switch suitShortcut {
-		case "C":
-			return club
-		case "D":	
-			return diamond
-		case "H":	
-			return heart
-		case "S":
-			return spade
-		default:	
-			panic(fmt.Sprintf("there is no such suit shortcut, %s",suitShortcut))
-		}
+func GetSuitFullName(suitShortcut string) suitKind {
+	switch suitShortcut {
+	case "C":
+		return club
+	case "D":
+		return diamond
+	case "H":
+		return heart
+	case "S":
+		return spade
+	default:
+		panic(fmt.Sprintf("there is no such suit shortcut, %s", suitShortcut))
+	}
 }
-
 
 // Rank
 type Rank struct {
@@ -111,7 +110,7 @@ func NewRank(rk rankKind) Rank {
 }
 
 func (rk rankKind) String() string {
-	return []string{"3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K", "A","2"}[rk]
+	return []string{"3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K", "A", "2"}[rk]
 }
 
 func GetRanks() [13]Rank {
@@ -143,8 +142,7 @@ func (r Rank) IsEqual(targetRank Rank) bool {
 	return r.GetRankKind() == targetRank.GetRankKind()
 }
 
-
-func GetRankFullName(rankShortcut string) rankKind{
+func GetRankFullName(rankShortcut string) rankKind {
 	switch rankShortcut {
 	case "3":
 		return three
@@ -173,15 +171,20 @@ func GetRankFullName(rankShortcut string) rankKind{
 	case "2":
 		return two
 	default:
-		panic(fmt.Sprintf("there is no such rank shortcut, %s",rankShortcut))
+		panic(fmt.Sprintf("there is no such rank shortcut, %s", rankShortcut))
 	}
 }
 
 // cardPattern
-type CardPattern interface {
-	IsBigger(cardPattern CardPattern) (bool,error)
+type CardPatern struct {
+	ICardPattern
+}
+
+type ICardPattern interface {
+	IsBigger(ICardPattern) (bool, error)
 	GetCards() []*Card
 	GetKind() string
+	Validate(ICardPattern) (interface{}, bool)
 }
 
 type CardPatternBase struct {
@@ -190,13 +193,13 @@ type CardPatternBase struct {
 }
 
 func NewCardPatternBase(kind string, cards []*Card) *CardPatternBase {
-	return &CardPatternBase{kind: kind,cards: cards}
+	return &CardPatternBase{kind: kind, cards: cards}
 }
 
-func (c *CardPatternBase) GetCards() []*Card{
+func (c *CardPatternBase) GetCards() []*Card {
 	return c.cards
 }
 
-func (c *CardPatternBase) GetKind() string{
+func (c *CardPatternBase) GetKind() string {
 	return c.kind
 }

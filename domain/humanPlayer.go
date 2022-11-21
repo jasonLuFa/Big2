@@ -15,7 +15,7 @@ type HumanPlayer struct {
 	id        int
 	handCards []*Card
 	playerCardsHandler PlayCardsHandler
-	playCards CardPattern
+	playCards ICardPattern
 }
 
 func NewHumanPlayer(name string, id int, playerCardsHandler PlayCardsHandler) *HumanPlayer {
@@ -24,13 +24,13 @@ func NewHumanPlayer(name string, id int, playerCardsHandler PlayCardsHandler) *H
 	return humanPlayer
 }
 
-func (player *HumanPlayer) TakeTurn(topCardPattern CardPattern, round int) {
+func (player *HumanPlayer) TakeTurn(topCardPattern ICardPattern, round int) {
 	fmt.Printf("輪到%s了\n",player.name)
 	fmt.Println(player.name,"的手牌 :", player.handCards)
 
 	var playCardsIdx []int
 	isValidated := false
-	var playCardPattern CardPattern
+	var playCardPattern ICardPattern
 	for !isValidated{
 		var playCards []*Card
 		playCards, playCardsIdx = player.play()
@@ -78,7 +78,7 @@ func (player *HumanPlayer) play() ([]*Card,[]int){
 	return playCards, playCardsIdx
 }
 
-func (player *HumanPlayer) removePlayCardsFromPlayer(playCardsIdx []int, playCardPattern CardPattern) {
+func (player *HumanPlayer) removePlayCardsFromPlayer(playCardsIdx []int, playCardPattern ICardPattern) {
 	newHandCards := RemoveCardsByIdx(player.handCards, playCardsIdx...)
 	player.handCards = newHandCards
 	player.playCards = playCardPattern
@@ -86,7 +86,7 @@ func (player *HumanPlayer) removePlayCardsFromPlayer(playCardsIdx []int, playCar
 	Turn++
 }
 
-func (player *HumanPlayer) GetPlayCards() CardPattern{
+func (player *HumanPlayer) GetPlayCards() ICardPattern{
 	return player.playCards
 }
 
